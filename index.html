@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestionale Giorgio</title>
+<style>
+body{
+font-family: Arial, sans-serif;
+background:#f2f2f2;
+margin:0;
+padding:20px;
+}
+.container{
+max-width:600px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+h1{
+text-align:center;
+color:#1e3c72;
+}
+input, textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+button{
+background:#1e3c72;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+width:100%;
+font-size:16px;
+margin-top:10px;
+}
+button:hover{
+background:#16305a;
+}
+.output{
+background:#f9f9f9;
+padding:10px;
+margin-top:15px;
+border-radius:6px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Gestionale Giorgio</h1>
+
+<label>Cliente</label>
+<input id="cliente" placeholder="Nome cliente">
+
+<label>Descrizione lavoro</label>
+<textarea id="descrizione" placeholder="Descrizione intervento"></textarea>
+
+<label>Importo €</label>
+<input id="importo" type="number" placeholder="0">
+
+<button onclick="genera()">Genera Ricevuta</button>
+
+<div class="output" id="risultato"></div>
+
+</div>
+
+<script>
+function genera(){
+let cliente=document.getElementById("cliente").value;
+let descrizione=document.getElementById("descrizione").value;
+let importo=document.getElementById("importo").value;
+
+if(cliente=="" || importo==""){
+alert("Compila almeno cliente e importo");
+return;
+}
+
+document.getElementById("risultato").innerHTML=
+"<strong>Ricevuta Prestazione Occasionale</strong><br><br>"+
+"Cliente: "+cliente+"<br>"+
+"Descrizione: "+descrizione+"<br>"+
+"Importo: € "+importo+"<br><br>"+
+"Prestazione occasionale senza Partita IVA.<br>"+
+"Giorgio Elettricista & Antennista";
+}
+</script>
+
+</body>
+</html>
