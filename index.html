@@ -1,96 +1,671 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestionale Giorgio</title>
-<style>
-body{
-font-family: Arial, sans-serif;
-background:#f2f2f2;
-margin:0;
-padding:20px;
-}
-.container{
-max-width:600px;
-margin:auto;
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-h1{
-text-align:center;
-color:#1e3c72;
-}
-input, textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:6px;
-border:1px solid #ccc;
-}
-button{
-background:#1e3c72;
-color:white;
-border:none;
-padding:10px;
-border-radius:6px;
-width:100%;
-font-size:16px;
-margin-top:10px;
-}
-button:hover{
-background:#16305a;
-}
-.output{
-background:#f9f9f9;
-padding:10px;
-margin-top:15px;
-border-radius:6px;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestionale Giorgio</title>
+  <style>
+    :root{
+      --bg:#f3f5f9;
+      --card:#ffffff;
+      --text:#0b1220;
+      --muted:#5b677a;
+      --brand:#153a66;
+      --brand2:#f59a1b;
+      --ok:#14a44d;
+      --danger:#dc3545;
+      --line:#e6e9f0;
+      --shadow: 0 10px 25px rgba(18, 38, 63, 0.10);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .topbar{
+      background:linear-gradient(135deg, var(--brand), #0f2c4c);
+      color:#fff;
+      padding:14px 16px;
+      position:sticky;
+      top:0;
+      z-index:10;
+      box-shadow: 0 6px 18px rgba(0,0,0,.14);
+    }
+    .topbar .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:12px;
+      background:rgba(255,255,255,.10);
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.16);
+      font-weight:900;
+      letter-spacing:.5px;
+      flex:0 0 auto;
+    }
+    .brand h1{
+      font-size:18px;
+      line-height:1.1;
+      margin:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brand small{
+      display:block;
+      margin-top:2px;
+      color:rgba(255,255,255,.80);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.12s transform, .12s opacity;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      user-select:none;
+    }
+    .btn:active{transform:scale(.98)}
+    .btn.primary{background:var(--brand2); color:#1a1a1a}
+    .btn.ghost{background:rgba(255,255,255,.10); color:#fff; border:1px solid rgba(255,255,255,.16)}
+    .wrap{
+      max-width:1100px;
+      margin:16px auto 34px;
+      padding:0 14px;
+    }
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:14px 0 16px;
+    }
+    .tab{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:800;
+      color:var(--muted);
+      box-shadow: 0 2px 10px rgba(18,38,63,.06);
+      cursor:pointer;
+    }
+    .tab.active{
+      background:var(--brand);
+      color:#fff;
+      border-color:transparent;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    @media(min-width: 980px){
+      .grid{grid-template-columns: 420px 1fr;}
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:10px 0 6px;
+      font-weight:700;
+    }
+    input, textarea, select{
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:90px; resize:vertical;}
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .row3{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+    }
+    .help{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      margin-top:8px;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .btn.dark{background:var(--brand); color:#fff}
+    .btn.light{background:#f0f2f6; color:#111}
+    .btn.danger{background:var(--danger); color:#fff}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      background:#f6f7fb; border:1px solid var(--line);
+      padding:10px 12px; border-radius:14px;
+      margin-top:10px;
+    }
+    .switch{
+      position:relative; width:44px; height:26px; border-radius:999px;
+      background:#cbd2df; cursor:pointer; flex:0 0 auto;
+      transition:.15s;
+    }
+    .switch::after{
+      content:""; position:absolute; top:3px; left:3px;
+      width:20px; height:20px; border-radius:50%;
+      background:white; transition:.15s;
+      box-shadow:0 6px 14px rgba(0,0,0,.16);
+    }
+    .switch.on{background:var(--ok)}
+    .switch.on::after{left:21px}
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:10px;
+    }
+    .item{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+    }
+    .item .top{
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    }
+    .item b{font-size:14px}
+    .item small{color:var(--muted)}
+    .item .meta{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+    .right-actions{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .mini{padding:8px 10px; border-radius:12px; font-size:13px}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size:12px;
+      background:#0b1220;
+      color:#fff;
+      border-radius:8px;
+      padding:3px 7px;
+    }
+    .muted{color:var(--muted)}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+  </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="row">
+      <div class="brand">
+        <div class="logo">G</div>
+        <div style="min-width:0">
+          <h1>Gestionale Giorgio</h1>
+          <small>Preventivi • Interventi • Ricevute (senza P.IVA)</small>
+        </div>
+      </div>
+      <div class="actions" style="margin:0">
+        <button class="btn ghost" id="btnBackup" type="button">⬇️ Backup</button>
+        <button class="btn ghost" id="btnImport" type="button">⬆️ Import</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" />
+      </div>
+    </div>
+  </div>
 
-<div class="container">
-<h1>Gestionale Giorgio</h1>
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" data-tab="preventivi">Preventivi</button>
+      <button class="tab" data-tab="interventi">Interventi</button>
+      <button class="tab" data-tab="ricevute">Ricevute</button>
+      <button class="tab" data-tab="impostazioni">Impostazioni</button>
+    </div>
 
-<label>Cliente</label>
-<input id="cliente" placeholder="Nome cliente">
+    <!-- PREVENTIVI -->
+    <div class="grid tabpanel" id="tab-preventivi">
+      <div class="card">
+        <h2>Nuovo preventivo</h2>
 
-<label>Descrizione lavoro</label>
-<textarea id="descrizione" placeholder="Descrizione intervento"></textarea>
+        <label>Cliente</label>
+        <input id="p_cliente" placeholder="Nome cliente" />
 
-<label>Importo €</label>
-<input id="importo" type="number" placeholder="0">
+        <div class="row2">
+          <div>
+            <label>Telefono</label>
+            <input id="p_tel" placeholder="(opzionale)" />
+          </div>
+          <div>
+            <label>Data</label>
+            <input id="p_data" type="date" />
+          </div>
+        </div>
 
-<button onclick="genera()">Genera Ricevuta</button>
+        <label>Descrizione</label>
+        <textarea id="p_desc" placeholder="Cosa fai, cosa includi, note..."></textarea>
 
-<div class="output" id="risultato"></div>
+        <div class="row2">
+          <div>
+            <label>Totale €</label>
+            <input id="p_tot" type="number" step="0.01" placeholder="0,00" />
+          </div>
+          <div>
+            <label>Acconto €</label>
+            <input id="p_acc" type="number" step="0.01" placeholder="0,00" />
+          </div>
+        </div>
 
-</div>
+        <div class="actions">
+          <button class="btn dark" id="p_salva" type="button">Salva preventivo</button>
+          <button class="btn light" id="p_pulisci" type="button">Pulisci</button>
+        </div>
+
+        <div class="help">
+          Suggerimento: scrivi chiaro cosa è incluso/escluso. Il cliente “serio” ama i preventivi leggibili.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Storico preventivi</h2>
+
+        <label>Cerca</label>
+        <input id="p_search" placeholder="Nome, telefono, descrizione..." />
+
+        <div class="list" id="p_list"></div>
+        <div class="help muted">I dati restano salvati sul telefono (localStorage). Fai Backup ogni tanto.</div>
+      </div>
+    </div>
+
+    <!-- INTERVENTI -->
+    <div class="grid tabpanel" id="tab-interventi" style="display:none">
+      <div class="card">
+        <h2>Nuovo intervento</h2>
+
+        <label>Cliente</label>
+        <input id="i_cliente" placeholder="Nome cliente" />
+
+        <div class="row2">
+          <div>
+            <label>Data</label>
+            <input id="i_data" type="date" />
+          </div>
+          <div>
+            <label>Zona / Comune</label>
+            <input id="i_zona" placeholder="Es. Alberobello" />
+          </div>
+        </div>
+
+        <label>Diagnosi / Lavoro svolto</label>
+        <textarea id="i_desc" placeholder="Cosa hai trovato e cosa hai fatto..."></textarea>
+
+        <div class="row3">
+          <div>
+            <label>Uscita €</label>
+            <input id="i_uscita" type="number" step="0.01" placeholder="0,00" />
+          </div>
+          <div>
+            <label>Manodopera €</label>
+            <input id="i_man" type="number" step="0.01" placeholder="0,00" />
+          </div>
+          <div>
+            <label>Materiali €</label>
+            <input id="i_mat" type="number" step="0.01" placeholder="0,00" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn dark" id="i_salva" type="button">Salva intervento</button>
+          <button class="btn light" id="i_pulisci" type="button">Pulisci</button>
+        </div>
+
+        <div class="help">
+          Qui puoi tenere traccia del costo finale in modo trasparente: uscita + lavoro + materiali.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Storico interventi</h2>
+
+        <label>Cerca</label>
+        <input id="i_search" placeholder="Cliente, zona, descrizione..." />
+
+        <div class="list" id="i_list"></div>
+      </div>
+    </div>
+
+    <!-- RICEVUTE -->
+    <div class="grid tabpanel" id="tab-ricevute" style="display:none">
+      <div class="card">
+        <h2>Nuova ricevuta (prestazione occasionale)</h2>
+
+        <div class="row2">
+          <div>
+            <label>Numero ricevuta</label>
+            <input id="r_num" disabled />
+            <div class="help">Automatico (puoi modificarlo in Impostazioni se vuoi).</div>
+          </div>
+          <div>
+            <label>Data</label>
+            <input id="r_data" type="date" />
+          </div>
+        </div>
+
+        <label>Cliente</label>
+        <input id="r_cliente" placeholder="Nome e cognome cliente" />
+
+        <div class="row2">
+          <div>
+            <label>Codice Fiscale (opz.)</label>
+            <input id="r_cf" placeholder="(se te lo dà)" />
+          </div>
+          <div>
+            <label>Indirizzo (opz.)</label>
+            <input id="r_ind" placeholder="Via..., Comune" />
+          </div>
+        </div>
+
+        <div class="pill">
+          <div class="switch" id="sw_uscita"></div>
+          <div>
+            <b>Uscita + diagnosi 60 €</b>
+            <div class="muted" style="font-size:12px">Attiva per inserirla automaticamente nella descrizione + totale.</div>
+          </div>
+        </div>
+
+        <label>Descrizione</label>
+        <textarea id="r_desc" placeholder="Es. Intervento su impianto elettrico / antenna TV..."></textarea>
+
+        <div class="row3">
+          <div>
+            <label>Manodopera €</label>
+            <input id="r_man" type="number" step="0.01" placeholder="0,00" />
+          </div>
+          <div>
+            <label>Materiali €</label>
+            <input id="r_mat" type="number" step="0.01" placeholder="0,00" />
+          </div>
+          <div>
+            <label>Totale €</label>
+            <input id="r_tot" type="number" step="0.01" placeholder="0,00" />
+            <div class="help">Se lasci vuoto, lo calcola da manodopera+materiali (+ uscita se attiva).</div>
+          </div>
+        </div>
+
+        <div class="pill">
+          <div class="switch" id="sw_bollo"></div>
+          <div>
+            <b>Mostra nota “marca da bollo 2€” (se > 77,47€)</b>
+            <div class="muted" style="font-size:12px">La nota compare solo se serve.</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn dark" id="r_salva" type="button">Salva ricevuta</button>
+          <button class="btn light" id="r_stampa" type="button">Stampa / PDF</button>
+          <button class="btn light" id="r_pulisci" type="button">Pulisci</button>
+        </div>
+
+        <div class="help">
+          Stampa/PDF: su Android, dopo “Stampa” puoi scegliere “Salva come PDF”.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Storico ricevute</h2>
+
+        <label>Cerca</label>
+        <input id="r_search" placeholder="Numero, cliente, descrizione..." />
+
+        <div class="list" id="r_list"></div>
+        <div class="help muted">Suggerimento: fai Backup prima di cambiare telefono.</div>
+      </div>
+    </div>
+
+    <!-- IMPOSTAZIONI -->
+    <div class="grid tabpanel" id="tab-impostazioni" style="display:none">
+      <div class="card">
+        <h2>Dati intestazione (stampa)</h2>
+
+        <label>Intestatario</label>
+        <input id="s_nome" placeholder="Es. Giorgio - Elettricista & Antennista" />
+
+        <div class="row2">
+          <div>
+            <label>Telefono / WhatsApp</label>
+            <input id="s_tel" placeholder="+39 ..." />
+          </div>
+          <div>
+            <label>Zona</label>
+            <input id="s_zona" placeholder="Es. Alberobello e dintorni" />
+          </div>
+        </div>
+
+        <label>Nota fissa (opz.)</label>
+        <textarea id="s_nota" placeholder="Es. Disponibile anche la sera e nei weekend."></textarea>
+
+        <div class="row2">
+          <div>
+            <label>Prefisso numerazione ricevute</label>
+            <input id="s_pref" placeholder="Es. R-" />
+          </div>
+          <div>
+            <label>Prossimo numero</label>
+            <input id="s_next" type="number" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn dark" id="s_salva" type="button">Salva impostazioni</button>
+          <button class="btn danger" id="s_reset" type="button">Reset dati (attenzione)</button>
+        </div>
+
+        <div class="help">
+          Reset dati cancella tutto lo storico sul telefono. Prima fai Backup.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Come “sembrare pro” senza esagerare</h2>
+        <div class="help">
+          - Preventivi chiari (cosa incluso/escluso) <br>
+          - Ricevuta sempre pulita e coerente <br>
+          - Storico interventi: se un cliente richiama, lo gestisci in 30 secondi <br><br>
+          Questo è il tipo di professionalità che fa salire i prezzi senza litigare.
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 <script>
-function genera(){
-let cliente=document.getElementById("cliente").value;
-let descrizione=document.getElementById("descrizione").value;
-let importo=document.getElementById("importo").value;
+/** ===== UTIL ===== */
+const $ = (id)=>document.getElementById(id);
+const todayISO = ()=> new Date().toISOString().slice(0,10);
+const euro = (n)=>{
+  const x = Number(n||0);
+  return x.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2});
+};
+const parseNum = (v)=> {
+  const n = Number(String(v||"").replace(",", "."));
+  return isFinite(n) ? n : 0;
+};
+const escapeHtml = (s)=> String(s||"")
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
 
-if(cliente=="" || importo==""){
-alert("Compila almeno cliente e importo");
-return;
+/** ===== STORAGE ===== */
+const KEY = "gestionale_giorgio_v2";
+const defaultState = {
+  settings:{
+    nome:"Giorgio - Elettricista & Antennista",
+    tel:"+39 351 796 9013",
+    zona:"Alberobello e dintorni",
+    nota:"",
+    prefix:"R-",
+    nextNumber: 1,
+    showBollo: true
+  },
+  preventivi:[],
+  interventi:[],
+  ricevute:[]
+};
+function loadState(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return structuredClone(defaultState);
+    const st = JSON.parse(raw);
+    return {
+      ...structuredClone(defaultState),
+      ...st,
+      settings:{...structuredClone(defaultState.settings), ...(st.settings||{})}
+    };
+  }catch(e){
+    return structuredClone(defaultState);
+  }
+}
+function saveState(){
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+let state = loadState();
+
+/** ===== TABS ===== */
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const tab = btn.dataset.tab;
+    document.querySelectorAll(".tabpanel").forEach(p=>p.style.display="none");
+    $("tab-"+tab).style.display="";
+  });
+});
+
+/** ===== SWITCHES ===== */
+function setupSwitch(el, initial, onChange){
+  if(initial) el.classList.add("on");
+  el.addEventListener("click", ()=>{
+    el.classList.toggle("on");
+    onChange(el.classList.contains("on"));
+  });
+}
+let uscitaOn = false;
+setupSwitch($("sw_uscita"), false, (v)=>{
+  uscitaOn = v;
+  if(v){
+    const base = $("r_desc").value.trim();
+    const add = "Uscita + diagnosi: 60 €";
+    if(!base.includes(add)){
+      $("r_desc").value = (base ? base + "\n" : "") + add;
+    }
+  }
+  autoCalcRicevuta();
+});
+setupSwitch($("sw_bollo"), state.settings.showBollo, (v)=>{
+  state.settings.showBollo = v;
+  saveState();
+});
+
+/** ===== INIT DEFAULTS ===== */
+$("p_data").value = todayISO();
+$("i_data").value = todayISO();
+$("r_data").value = todayISO();
+
+/** ===== SETTINGS UI ===== */
+function refreshSettingsUI(){
+  $("s_nome").value = state.settings.nome || "";
+  $("s_tel").value  = state.settings.tel || "";
+  $("s_zona").value = state.settings.zona || "";
+  $("s_nota").value = state.settings.nota || "";
+  $("s_pref").value = state.settings.prefix || "R-";
+  $("s_next").value = state.settings.nextNumber || 1;
+  $("r_num").value = formatReceiptNumber(state.settings.nextNumber);
+}
+function formatReceiptNumber(n){
+  const num = String(n).padStart(4,"0");
+  return (state.settings.prefix || "R-") + num;
 }
 
-document.getElementById("risultato").innerHTML=
-"<strong>Ricevuta Prestazione Occasionale</strong><br><br>"+
-"Cliente: "+cliente+"<br>"+
-"Descrizione: "+descrizione+"<br>"+
-"Importo: € "+importo+"<br><br>"+
-"Prestazione occasionale senza Partita IVA.<br>"+
-"Giorgio Elettricista & Antennista";
-}
-</script>
+/** ===== PREVENTIVI ===== */
+function renderPreventivi(){
+  const q = $("p_search").value.trim().toLowerCase();
+  const list = state.preventivi
+    .slice()
+    .sort((a,b)=> (b.ts||0)-(a.ts||0))
+    .filter(x=>{
+      const blob = `${x.cliente} ${x.tel} ${x.desc} ${x.data}`.toLowerCase();
+      return !q || blob.includes(q);
+    });
 
-</body>
-</html>
+  $("p_list").innerHTML = list.length ? "" : `<div class="muted">Nessun preventivo salvato.</div>`;
+  list.forEach(p=>{
+    const el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = `
+      <div class="top">
+        <div>
+          <b>${escapeHtml(p.cliente || "Senza nome")}</b><br>
+          <small>${escapeHtml(p.data||"")} • Totale € ${euro(p.tot)}</small>
+        </div>
+        <div class="right-actions">
+          <button class="btn mini light" data-act="load">Carica</button>
+          <button class="btn mini danger" data-act="del">Elimina</button>
+        </div>
+      </div>
+      <div class="meta">${escapeHtml(p.desc||"")}${p.tel?`\nTel: ${escapeHtml(p.tel)}`:""}${p.acc?`\nAcconto: € ${euro(p.acc)}`:""}</div>
+    `;
+    el.querySelector('[data-act="load"]').onclick = ()=>{
+      $("p_cliente").value = p.cliente||"";
+      $("p_tel").value = p.tel||"";
+      $("p_data").value = p.data||todayISO();
+      $("p_desc").value = p.desc||"";
+      $("p_tot").value = p.tot||"";
+      $("p_acc").value = p.acc||"";
+      window.scrollTo({top:0, behavior:"smooth"});
+    };
+    el.querySelector('[data-act="del"]').onclick = ()=>{
+      if(!confirm("Eliminare questo preventivo?")) return;
+      state.preventivi = state.preventivi.filter(x=>x.id!==p.id);
+      saveState();
+     
